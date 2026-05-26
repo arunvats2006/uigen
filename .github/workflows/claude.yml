@@ -32,7 +32,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install Playwright MCP server
         run: npm install -g @playwright/mcp@latest
@@ -40,17 +40,22 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Create Playwright MCP config
+        run: |
+          cat > /tmp/playwright-mcp.json << 'EOF'
+          {
+            "mcpServers": {
+              "playwright": {
+                "command": "playwright-mcp",
+                "args": ["--headless"]
+              }
+            }
+          }
+          EOF
+
       - name: Run Claude Code with Playwright MCP
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          mcp_config: |
-            {
-              "mcpServers": {
-                "playwright": {
-                  "command": "playwright-mcp",
-                  "args": ["--headless"]
-                }
-              }
-            }
+          claude_args: --mcp-config /tmp/playwright-mcp.json
