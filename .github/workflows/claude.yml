@@ -41,7 +41,7 @@ jobs:
         run: npx -y @playwright/mcp@latest install --with-deps
 
       - name: Run Claude Code with Playwright MCP
-        uses: anthropics/claude-code-action@beta
+        uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
