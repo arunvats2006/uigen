@@ -38,7 +38,7 @@ jobs:
         run: npm install -g @playwright/mcp@latest
 
       - name: Install Playwright browsers
-        run: npx -y @playwright/mcp@latest install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Run Claude Code with Playwright MCP
         uses: anthropics/claude-code-action@v1
