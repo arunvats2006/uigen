@@ -37,7 +37,7 @@ jobs:
         run: npm install -g @playwright/mcp@latest
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx -y @playwright/mcp@latest install --with-deps
 
       - name: Run Claude Code with Playwright MCP
         uses: anthropics/claude-code-action@beta
@@ -47,11 +47,8 @@ jobs:
             {
               "mcpServers": {
                 "playwright": {
-                  "command": "npx",
-                  "args": ["@playwright/mcp@latest", "--headless"],
-                  "env": {
-                    "DISPLAY": ""
-                  }
+                  "command": "playwright-mcp",
+                  "args": ["--headless"]
                 }
               }
             }
