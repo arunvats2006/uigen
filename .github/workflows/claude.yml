@@ -7,7 +7,7 @@ on:
     types: [created]
   issues:
     types: [opened, assigned]
-    
+
   pull_request_review:
     types: [submitted]
 
@@ -25,7 +25,33 @@ jobs:
       issues: write
       id-token: write
     steps:
-      - name: Run Claude Code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright MCP server
+        run: npm install -g @playwright/mcp@latest
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Claude Code with Playwright MCP
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          mcp_config: |
+            {
+              "mcpServers": {
+                "playwright": {
+                  "command": "npx",
+                  "args": ["@playwright/mcp@latest", "--headless"],
+                  "env": {
+                    "DISPLAY": ""
+                  }
+                }
+              }
+            }
